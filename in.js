@@ -1,0 +1,1 @@
+global.jsdiff = require('diff');
