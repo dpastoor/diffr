@@ -80,7 +80,7 @@ inject_diffs <- function(flines, steps, diffs) {
   for (i in seq_along(diffs)) {
     ## add flex dashboard boilerplate
     ## add diff
-    output_lines <- c(output_lines, stringr::str_split(diffs[[i]], "\\n")[[1]])
+    output_lines <- c(output_lines, "", "***", "", stringr::str_split(diffs[[i]], "\\n")[[1]])
     ## don't append more code chunk lines if last one, as none exist
     if (i != length(diffs)) {
       output_lines <- c(output_lines, flines[steps$ends[i+1]:steps$ends[i+2]])
@@ -95,8 +95,10 @@ inject_diffs <- function(flines, steps, diffs) {
   rm_indices <- c(starts, ends)
   rm_indices <- rm_indices[order(rm_indices)]
   output_lines <- output_lines[-rm_indices]
-  return(output_lines)
-  # add_flex_commentary(output_lines, str_detect_indices(output_lines, "###"), DASH_COMMENTARY)
+  result <- add_flex_commentary(output_lines, 
+                                str_detect_indices(output_lines, "###"), 
+                                DASH_COMMENTARY)
+  return(result)
 }
 
 str_detect_indices(flines, "###")
