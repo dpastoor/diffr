@@ -1,12 +1,22 @@
 PRE_START <- "<pre id=\"result\">" 
 PRE_END <- "</pre>"
-
+DASH_COMMENTARY <- "{data-commentary-width=600}"
 create_raw_diff <- function(step, next_step) {
   ct <- V8::v8()
   ct$source("./bundle.js")
-  ct$call("jsdiff.diffWords", 
+  result <- ct$call("jsdiff.diffWords", 
           paste0(step, collapse = "\n"), 
           paste0(next_step, collapse = "\n"))
+  ## if no lines were added/removed that column will not exist
+  POSSIBLE_COLS <- c("added", "removed")
+  missing_cols_index <- which(!POSSIBLE_COLS %in% names(result))
+  ## add column of NA's 
+  if(!(length(missing_cols_index) == length(POSSIBLE_COLS))) {
+    for (i in missing_cols_index) {
+      result[POSSIBLE_COLS[i]] <- NA
+    }
+  }
+  return(result)
 }
 
 str_detect_indices <- function(string, pattern) {
@@ -43,7 +53,7 @@ trim_inward <- function(.x, .num) {
 }
 ## testing 
 library(dplyr)
-flines <- readr::read_lines("__parsing_ex01.Rmd")
+flines <- readr::read_lines("__parsing_dash01.Rmd")
 
 starts <- str_detect_indices(flines, "@start")
 ends <- str_detect_indices(flines, "@end")
@@ -68,10 +78,12 @@ inject_diffs <- function(flines, steps, diffs) {
   output_lines <- flines[1:steps$ends[2]]
   ## each diff
   for (i in seq_along(diffs)) {
+    ## add flex dashboard boilerplate
+    ## add diff
     output_lines <- c(output_lines, stringr::str_split(diffs[[i]], "\\n")[[1]])
     ## don't append more code chunk lines if last one, as none exist
     if (i != length(diffs)) {
-      output_lines <- c(output_lines, flines[steps$starts[i+2]:steps$ends[i+2]])
+      output_lines <- c(output_lines, flines[steps$ends[i+1]:steps$ends[i+2]])
     }
   }
   ## end
@@ -82,8 +94,17 @@ inject_diffs <- function(flines, steps, diffs) {
   ends <- str_detect_indices(output_lines, "@end")
   rm_indices <- c(starts, ends)
   rm_indices <- rm_indices[order(rm_indices)]
-  output_lines[-rm_indices]
-  
+  output_lines <- output_lines[-rm_indices]
+  return(output_lines)
+  # add_flex_commentary(output_lines, str_detect_indices(output_lines, "###"), DASH_COMMENTARY)
 }
 
-writeLines(inject_diffs(flines, steps, diffs), "parsing_ex01.Rmd")
+str_detect_indices(flines, "###")
+add_flex_commentary <- function(lines, indices, injection_text = DASH_COMMENTARY) {
+  for (i in indices) {
+    lines[i] <- paste(lines[i], injection_text)
+  }
+  return(lines)
+}
+add_flex_commentary(flines, str_detect_indices(flines, "###"))
+writeLines(inject_diffs(flines, steps, diffs), "parsing_dash01.Rmd")
