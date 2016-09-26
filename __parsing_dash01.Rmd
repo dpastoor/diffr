@@ -1,0 +1,108 @@
+---
+title: "ggvisualizer"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    self_contained: false
+---
+
+```{r}
+library(PKPDmisc)
+library(PKPDdatasets)
+library(ggplot2)
+```
+
+### Final output
+
+```{r}
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = factor(Gender))) + 
+  geom_histogram(binwidth = 4, color = "black", aes(fill = Gender)) + 
+  geom_vline(xintercept = 70, size = 1.5, color = "red") + 
+  labs(
+    x="Weight (kg)", 
+    y = "Count") + 
+  base_theme()
+```
+
+***
+
+Dataset preview
+
+```{r}
+knitr::kable(head(sd_oral_richpk))
+```
+
+### step 1 - The base histogram
+
+@start step1
+```{r }
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = Gender)) + 
+  geom_histogram()  
+```
+@end step1
+
+***
+
+Plot code:
+
+```r
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = Gender)) + 
+  geom_histogram()  
+```
+
+### step 2 - change the binwidth and add some theming and labels
+
+@start step2
+```{r }
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = Gender)) + 
+  geom_histogram(binwidth = 4, color = "black") + 
+  labs(
+    x="Weight (kg)", 
+    y = "Count") + 
+  theme_bw() + 
+  base_theme()
+```
+@end step2
+
+### step 3 - attempt to distinguish by gender via coloring
+
+@start step3
+```{r }
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = Gender)) + 
+  geom_histogram(binwidth = 4, aes(color = Gender)) + 
+  labs(
+    x="Weight (kg)", 
+    y = "Count") + 
+  base_theme()
+```
+@end step3
+
+### step 4 - correct the color to use fill
+
+@start step4
+```{r }
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = factor(Gender))) + 
+  geom_histogram(binwidth = 4, color = "black", aes(fill = Gender)) + 
+  labs(
+    x="Weight (kg)", 
+    y = "Count") + 
+  base_theme()
+```
+@end step4
+
+### step 5 - add a vertical line
+
+@start step5
+```{r }
+ggplot(data = sd_oral_richpk, aes(x = Weight, group = factor(Gender))) + 
+  geom_histogram(binwidth = 4, color = "black", aes(fill = Gender)) + 
+  geom_vline(xintercept = 70, size = 1.5, color = "red") + 
+  labs(
+    x="Weight (kg)", 
+    y = "Count") + 
+  base_theme()
+```
+@end step5
+
+Final result looks good!
