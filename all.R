@@ -60,7 +60,9 @@ ends <- str_detect_indices(flines, "@end")
 
 steps <- data.frame(starts, ends)
 
-
+extract_trimmed_lines <- function(flines, start, end, trim = 2) {
+  c("Plot code:", "", "```r", flines[(start+trim):(end - trim)], "```")
+}
 setup_diffs <- function(flines, steps) {
   result_list <- list()
   for (si in 1:(nrow(steps)-1)) {
@@ -80,7 +82,9 @@ inject_diffs <- function(flines, steps, diffs) {
   for (i in seq_along(diffs)) {
     ## add flex dashboard boilerplate
     ## add diff
-    output_lines <- c(output_lines, "", "***", "", stringr::str_split(diffs[[i]], "\\n")[[1]])
+    output_lines <- c(output_lines, "", "***", "", "Changes:", "", 
+                      stringr::str_split(diffs[[i]], "\\n")[[1]],
+                      extract_trimmed_lines(flines, steps$starts[i+1], steps$ends[i+1], 2))
     ## don't append more code chunk lines if last one, as none exist
     if (i != length(diffs)) {
       output_lines <- c(output_lines, flines[steps$ends[i+1]:steps$ends[i+2]])
