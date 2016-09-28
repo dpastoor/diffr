@@ -11,24 +11,26 @@ The way the package works is to add an extra macro to Rmd document to declare
 what code chunks correspond to steps you want to visualize.
 
 ```
-
   ### Step 1 - <some description>
   
   @start step1
-  ```{r }
+  ``.`{r }
   <some code>
-  ```
+  ``.`
   @end step1
-
+  
   ### Step 2 - <some description>
   
   @start step2
-  ```{r }
+  ``.`{r }
   <some code> with some additional changes
   ```
   @end step2
-  
+  ``.`
 ```
+
+(dots in the rmd code chunks to fix rendering on github, but should not be present in real Rmd)
+
 
 Example of interatively building a histogram
 
