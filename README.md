@@ -10,7 +10,8 @@ what things are changed similar to `git diff`.
 The way the package works is to add an extra macro to Rmd document to declare
 what code chunks correspond to steps you want to visualize.
 
-```r
+```
+
   ### Step 1 - <some description>
   
   @start step1
@@ -26,6 +27,7 @@ what code chunks correspond to steps you want to visualize.
   <some code> with some additional changes
   ```
   @end step2
+  
 ```
 
 Example of interatively building a histogram
