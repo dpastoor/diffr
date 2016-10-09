@@ -1,0 +1,127 @@
+---
+title: "stacked bar charts"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    self_contained: false
+---
+
+#
+```{r libraries, warning=FALSE, message=FALSE}
+# required libraries
+library("PKPDmisc")
+library("knitr")
+library("ggplot2")
+library("PKPDdatasets")
+library("dplyr")
+library("forcats")
+```
+
+```{r globalsettings}
+opts_chunk$set(fig.height = 6, fig.width = 10, dpi = 300)
+```
+
+### Final output
+
+```{r}
+ggplot(pain_score, aes(x = TRT, fill = painscore)) + 
+  geom_bar(color = "black") +
+  labs(title = "Pain Score Count Grouped by Treatment Administered", 
+       x = "Treatment", 
+       y = "Count") +
+  theme_bw() +
+  base_theme()
+```
+
+***
+
+Dataset preview
+
+```{r}
+knitr::kable(head(pain_score))
+```
+
+### Step 1 - the base bar chart
+
+@start step1
+```{r}
+ggplot(pain_score, aes(x = painscore)) + geom_bar()
+```
+@end step1
+
+### Step 2 Reorder the data so pain score levels make sense
+
+```{r}
+pain_score <- pain_score %>% 
+  mutate(painscore = fct_relevel(painscore, c("No pain relief", 
+                                              "slight pain relief", 
+                                              "Moderate pain relief", 
+                                              "Complete pain relief"))
+         )
+
+ggplot(pain_score, aes(x = painscore)) + geom_bar()
+```
+
+***
+
+```r
+pain_score <- pain_score %>% 
+  mutate(painscore = fct_relevel(painscore, c("No pain relief", 
+                                              "slight pain relief", 
+                                              "Moderate pain relief", 
+                                              "Complete pain relief"))
+         )
+```
+
+### Step 3 - Stack by treatment
+
+@start step3
+```{r}
+ggplot(pain_score, aes(x = TRT, fill = painscore)) + 
+  geom_bar()
+```
+@end step3
+
+
+### Step 3 - Add black bar around each treatment group
+
+@start step3
+```{r}
+ggplot(pain_score, aes(x = TRT, fill = painscore)) + 
+  geom_bar(color = "black")
+```
+@end step3
+
+### Step 4 - Improve layout and styling
+
+@start step4
+```{r}
+ggplot(pain_score, aes(x = TRT, fill = painscore)) + 
+  geom_bar(color = "black") +
+  labs(title = "Pain Score Count Grouped by Treatment Administered", 
+       x = "Treatment", 
+       y = "Count") +
+  theme_bw() +
+  base_theme()
+```
+@end step4
+
+### Step 5 (Bonus) - Flatten graph so not stacked
+
+@start step5
+```{r}
+ggplot(pain_score, aes(x = TRT, fill = painscore)) + 
+  geom_bar(position = position_dodge(), color = "black") +
+  labs(title = "Pain Score Count Grouped by Treatment Administered", 
+       x = "Treatment", 
+       y = "Count") +
+  theme_bw() +
+  base_theme()
+```
+@end step5
+
+### Session Information for packages and such
+```{r}
+devtools::session_info()
+```
