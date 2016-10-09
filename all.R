@@ -1,3 +1,4 @@
+FILENAME <- "barcharts01.Rmd"
 PRE_START <- "<pre id=\"result\">" 
 PRE_END <- "</pre>"
 DASH_COMMENTARY <- "{data-commentary-width=600}"
@@ -53,7 +54,7 @@ trim_inward <- function(.x, .num) {
 }
 ## testing 
 library(dplyr)
-flines <- readr::read_lines("__parsing_dash01.Rmd")
+flines <- readr::read_lines(paste0("__", FILENAME))
 
 starts <- str_detect_indices(flines, "@start")
 ends <- str_detect_indices(flines, "@end")
@@ -113,4 +114,4 @@ add_flex_commentary <- function(lines, indices, injection_text = DASH_COMMENTARY
   return(lines)
 }
 add_flex_commentary(flines, str_detect_indices(flines, "###"))
-writeLines(inject_diffs(flines, steps, diffs), "parsing_dash01.Rmd")
+writeLines(inject_diffs(flines, steps, diffs), FILENAME)
