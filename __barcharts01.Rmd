@@ -24,7 +24,7 @@ opts_chunk$set(fig.height = 6, fig.width = 10, dpi = 300)
 
 ### Final output
 
-```{r}
+```{r barchart01 }
 ggplot(pain_score, aes(x = TRT, fill = painscore)) + 
   geom_bar(color = "black") +
   labs(title = "Pain Score Count Grouped by Treatment Administered", 

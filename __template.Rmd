@@ -1,0 +1,51 @@
+
+---
+title: "<title>"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    self_contained: false
+---
+
+
+```{r libraries, warning=FALSE, message=FALSE}
+# required libraries
+library("PKPDmisc")
+library("knitr")
+library("ggplot2")
+library("PKPDdatasets")
+library("dplyr")
+library("forcats")
+```
+
+```{r globalsettings}
+opts_chunk$set(fig.height = 6, fig.width = 10, dpi = 300)
+```
+
+### Final output
+
+```{r <name>}
+
+```
+
+***
+
+Dataset preview
+
+```{r}
+knitr::kable(head(<dataset>))
+```
+
+### Step 1 - the base bar chart
+
+@start step1
+```{r}
+
+```
+@end step1
+
+### Session Information for packages and such
+```{r}
+devtools::session_info()
+```
