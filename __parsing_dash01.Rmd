@@ -1,5 +1,5 @@
 ---
-title: "ggvisualizer"
+title: "basic histogram"
 output: 
   flexdashboard::flex_dashboard:
     storyboard: true
@@ -13,9 +13,13 @@ library(PKPDdatasets)
 library(ggplot2)
 ```
 
+```{r globalsettings}
+opts_chunk$set(fig.height = 6, fig.width = 10, dpi = 300)
+```
+
 ### Final output
 
-```{r basischistogram01 }
+```{r basichistogram01 }
 ggplot(data = sd_oral_richpk, aes(x = Weight, group = factor(Gender))) + 
   geom_histogram(binwidth = 4, color = "black", aes(fill = Gender)) + 
   geom_vline(xintercept = 70, size = 1.5, color = "red") + 

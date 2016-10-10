@@ -1,0 +1,148 @@
+
+---
+title: "Concentration time plot"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+    social: menu
+    self_contained: false
+---
+
+
+```{r libraries, warning=FALSE, message=FALSE}
+# required libraries
+library("PKPDmisc")
+library("knitr")
+library("ggplot2")
+library("PKPDdatasets")
+library("dplyr")
+library("forcats")
+```
+
+```{r globalsettings}
+opts_chunk$set(fig.height = 6, fig.width = 10, dpi = 300)
+```
+
+```{r}
+data <- dapa_IV_oral %>% filter(FORMULATION ==  "ORAL", OCC == 2)
+mean_occ2 <- data %>% 
+  group_by(GENDER, TAD) %>% 
+  summarize(meanCONC = round(exp(mean(log(COBS))),3))
+
+```
+
+### Final output
+
+```{r conctime01 }
+ggplot(data, aes(x = TAD, y = COBS, 
+                      group = ID)) + 
+  geom_line(size = 1.05)+ 
+  xlab("Time After Dose, hours") +
+  ylab("Concentration, ug/mL") +
+  scale_y_log10(breaks = c(1, 10 , 50, 100, 150)) +
+  theme_bw() +
+  base_theme() +
+  geom_line(data = mean_occ2, aes(x = TAD, 
+                                  y = meanCONC, 
+                                  group = GENDER, 
+                                  color = GENDER), size = 1.5) +
+  scale_color_discrete(name="Gender", 
+                       labels= c("Male", "Female")) + 
+    theme(legend.justification=c(1,1), legend.position=c(1,1))
+```
+
+***
+
+Dataset previews
+
+```{r}
+knitr::kable(head(data))
+knitr::kable(head(mean_occ2))
+```
+
+### Step 1 - the base bar chart
+
+@start step1
+```{r}
+ggplot(data, aes(x = TAD, y = COBS, 
+                      group = ID)) + 
+  geom_line()
+```
+@end step1
+
+### Step 2 - Add better labels and styling, including log transform y axis
+
+@start step2
+```{r}
+ggplot(data, aes(x = TAD, y = COBS, 
+                      group = ID)) + 
+  geom_line(size = 1.05)+ 
+  xlab("Time After Dose, hours") +
+  ylab("Concentration, ug/mL") +
+  scale_y_log10() +
+  theme_bw() +
+  base_theme() 
+```
+@end step2
+
+### Step 3 - Change tick locations for y axis
+
+@start step3
+```{r}
+ggplot(data, aes(x = TAD, y = COBS, 
+                      group = ID)) + 
+  geom_line(size = 1.05)+ 
+  xlab("Time After Dose, hours") +
+  ylab("Concentration, ug/mL") +
+  scale_y_log10(breaks = c(1, 10 , 50, 100, 150)) +
+  theme_bw() +
+  base_theme() 
+```
+@end step3
+
+### Step 4 - Add mean conc time by gender overlay
+
+@start step4
+```{r}
+ggplot(data, aes(x = TAD, y = COBS, 
+                      group = ID)) + 
+  geom_line(size = 1.05)+ 
+  xlab("Time After Dose, hours") +
+  ylab("Concentration, ug/mL") +
+  scale_y_log10(breaks = c(1, 10 , 50, 100, 150)) +
+  theme_bw() +
+  base_theme() +
+  geom_line(data = mean_occ2, aes(x = TAD, 
+                                  y = meanCONC, 
+                                  group = GENDER, 
+                                  color = GENDER), size = 1.5)
+  
+```
+@end step4
+
+### Step 5 - rename and reposition legend
+
+@start step5
+```{r}
+ggplot(data, aes(x = TAD, y = COBS, 
+                      group = ID)) + 
+  geom_line(size = 1.05)+ 
+  xlab("Time After Dose, hours") +
+  ylab("Concentration, ug/mL") +
+  scale_y_log10(breaks = c(1, 10 , 50, 100, 150)) +
+  theme_bw() +
+  base_theme() +
+  geom_line(data = mean_occ2, aes(x = TAD, 
+                                  y = meanCONC, 
+                                  group = GENDER, 
+                                  color = GENDER), size = 1.5) +
+  scale_color_discrete(name="Gender", 
+                       labels= c("Male", "Female")) + 
+    theme(legend.justification=c(1,1), legend.position=c(1,1))
+```
+@end step5
+
+### Session Information for packages and such
+```{r}
+devtools::session_info()
+```
