@@ -11,6 +11,7 @@ output:
 library(PKPDmisc)
 library(PKPDdatasets)
 library(ggplot2)
+library(knitr)
 ```
 
 ```{r globalsettings}
